@@ -46,6 +46,12 @@ if (localStorage.getItem("entries")) {
         var nameCell = row.insertCell(0);
         var emailCell = row.insertCell(1);
         var passwordCell = row.insertCell(2);
-        var dobCell = row.insertCell
-        }
+        var dobCell = row.insertCell(3);
+        var acceptedCell = row.insertCell(4);
+        nameCell.innerHTML = entries[i].name;
+        emailCell.innerHTML = entries[i].email;
+        passwordCell.innerHTML = entries[i].password;
+        dobCell.innerHTML = entries[i].dob;
+        acceptedCell.innerHTML = entries[i].accepted ? "Yes" : "No";
+    }
 }
