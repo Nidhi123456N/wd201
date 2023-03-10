@@ -13,21 +13,8 @@
         return false;
     }
     
-    // Check age
-    var today = new Date();
-    var birthDate = new Date(dob);
-    var age = today.getFullYear() - birthDate.getFullYear();
-    var monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-    if (age < 18 || age > 55) {
-        alert("You must be between 18 and 55 years old");
-        return false;
-    }
-    
     // Create table row
-    var table = document.getElementById("entries");
+    var table = document.getElementById("entries").getElementsByTagName("tbody")[0];
     var row = table.insertRow(-1);
     var nameCell = row.insertCell(0);
     var emailCell = row.insertCell(1);
@@ -39,18 +26,6 @@
     passwordCell.innerHTML = password;
     dobCell.innerHTML = dob;
     acceptedCell.innerHTML = accepted ? "Yes" : "No";
-    
-    // Save entries to local storage
-    var entries = JSON.parse(localStorage.getItem("entries")) || [];
-    var entry = {
-        name: name,
-        email: email,
-        password: password,
-        dob: dob,
-        accepted: accepted
-    };
-    entries.push(entry);
-    localStorage.setItem("entries", JSON.stringify(entries));
     
     // Clear form
     document.getElementById("registrationForm").reset();
@@ -65,18 +40,12 @@ form.addEventListener("submit", addEntry);
 // Load saved entries from local storage
 if (localStorage.getItem("entries")) {
     var entries = JSON.parse(localStorage.getItem("entries"));
-    var table = document.getElementById("entries");
+    var table = document.getElementById("entries").getElementsByTagName("tbody")[0];
     for (var i = 0; i < entries.length; i++) {
         var row = table.insertRow(-1);
         var nameCell = row.insertCell(0);
         var emailCell = row.insertCell(1);
         var passwordCell = row.insertCell(2);
-        var dobCell = row.insertCell(3);
-        var acceptedCell = row.insertCell(4);
-        nameCell.innerHTML = entries[i].name;
-        emailCell.innerHTML = entries[i].email;
-        passwordCell.innerHTML = entries[i].password;
-        dobCell.innerHTML = entries[i].dob;
-        acceptedCell.innerHTML = entries[i].accepted ? "Yes" : "No";
-    }
+        var dobCell = row.insertCell
+        }
 }
