@@ -1,62 +1,55 @@
-  // Initialize an empty array to store user entries
-let users = [];
-
-// Retrieve the form element from the DOM
-const form = document.getElementById("regForm");
-
-// Retrieve the table element from the DOM
-const table = document.getElementById("userTable");
-
-// Define a function to add a user entry to the table
-function addUserToTable(user) {
-	// Create a new row element
-	const row = document.createElement("tr");
+  function addEntry() {
+	// Get form values
+	var name = document.getElementById("name").value;
+	var email = document.getElementById("email").value;
+	var password = document.getElementById("password").value;
+	var dob = document.getElementById("dob").value;
+	var accepted = document.getElementById("accepted").checked;
 	
-	// Add cells to the row for each user property
-	const nameCell = document.createElement("td");
-	nameCell.textContent = user.name;
-	row.appendChild(nameCell);
-	
-	const emailCell = document.createElement("td");
-	emailCell.textContent = user.email;
-	row.appendChild(emailCell);
-	
-	const passwordCell = document.createElement("td");
-	passwordCell.textContent = user.password;
-	row.appendChild(passwordCell);
-	
-	const dobCell = document.createElement("td");
-	dobCell.textContent = user.dob;
-	row.appendChild(dobCell);
-	
-	const termsCell = document.createElement("td");
-	termsCell.textContent = user.terms ? "Yes" : "No";
-	row.appendChild(termsCell);
-	
-	// Add the new row to the table
-	table.querySelector("tbody").appendChild(row);
-}
-
-// Define a function to validate the form before submission
-function validateForm() {
-	// Retrieve form fields from the DOM
-	const nameField = document.getElementById("name");
-	const emailField = document.getElementById("email");
-	const passwordField = document.getElementById("password");
-	const dobField = document.getElementById("dob");
-	const termsField = document.getElementById("terms");
-	
-	// Retrieve form field values
-	const name = nameField.value.trim();
-	const email = emailField.value.trim();
-	const password = passwordField.value.trim();
-	const dob = new Date(dobField.value);
-	const terms = termsField.checked;
-	
-	// Validate email address
-	if (!isValidEmail(email)) {
+	// Check for valid email
+	var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	if (!emailRegex.test(email)) {
 		alert("Invalid email address");
 		return false;
 	}
 	
-	// Validate age
+	// Check age
+	var today = new Date();
+	var birthDate = new Date(dob);
+	var age = today.getFullYear() - birthDate.getFullYear();
+	var monthDiff = today.getMonth() - birthDate.getMonth();
+	if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+	    age--;
+	}
+	if (age < 18 || age > 55) {
+		alert("You must be between 18 and 55 years old");
+		return false;
+	}
+	
+	// Create table row
+	var table = document.getElementById("entries");
+	var row = table.insertRow(-1);
+	var nameCell = row.insertCell(0);
+	var emailCell = row.insertCell(1);
+	var passwordCell = row.insertCell(2);
+	var dobCell = row.insertCell(3);
+	var acceptedCell = row.insertCell(4);
+	nameCell.innerHTML = name;
+	emailCell.innerHTML = email;
+	passwordCell.innerHTML = password;
+	dobCell.innerHTML = dob;
+	acceptedCell.innerHTML = accepted ? "Yes" : "No";
+	
+	// Clear form
+	document.getElementById("registrationForm").reset();
+	
+	return false;
+}
+
+// Add event listener to form submit
+var form = document.getElementById("registrationForm");
+form.addEventListener("submit", addEntry);
+
+// Load saved entries from local storage
+if (localStorage.getItem("entries")) {
+	var entries = JSON.parse(localStorage.getItem("entries"));
