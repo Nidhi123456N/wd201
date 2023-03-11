@@ -1,38 +1,45 @@
 <!DOCTYPE html>
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Registration Form</title>
-	<script src="index.js"></script>
-</head>
-<body>
-	<h1>Registration Form</h1>
-	<form id="regForm">
-		<label for="name">Name:</label><br>
-		<input type="text" id="name" name="name" required><br>
-		<label for="email">Email:</label><br>
-		<input type="email" id="email" name="email" required><br>
-		<label for="password">Password:</label><br>
-		<input type="password" id="password" name="password" required><br>
-		<label for="dob">Date of Birth:</label><br>
-		<input type="date" id="dob" name="dob" required><br>
-		<label for="terms">Accept Terms and Conditions:</label>
-		<input type="checkbox" id="terms" name="terms" required><br>
-		<input type="submit" value="Submit">
-	</form>
-	<table id="userTable">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Email</th>
-				<th>Password</th>
-				<th>Dob</th>
-				<th>Accepted terms?</th>
-			</tr>
-		</thead>
-		<tbody>
-		</tbody>
-	</table>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Registration Form</title>
+  </head>
+  <body>
+    <h1>Registration Form</h1>
+    <form id="registration-form">
+      <label for="name">Name:</label>
+      <input type="text" id="name" required /><br />
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" required /><br />
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" required /><br />
+
+      <label for="dob">Date of Birth (mm/dd/yyyy):</label>
+      <input type="date" id="dob" required /><br />
+
+      <label for="accept-terms">I accept the terms and conditions:</label>
+      <input type="checkbox" id="accept-terms" required /><br />
+
+      <button type="submit">Submit</button>
+    </form>
+    <h2>Registered Users</h2>
+    <table id="registered-users">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Password</th>
+          <th>DOB</th>
+          <th>Accepted Terms?</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <script src="index.js"></script>
+  </body>
 </html>
+
 
