@@ -50,3 +50,4 @@ form.addEventListener('submit', event => {
   form.reset();
   localStorage.setItem('registrationData', JSON.stringify([...(JSON.parse(localStorage.getItem('registrationData')) || []), user]));
 });
+
