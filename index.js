@@ -1,6 +1,4 @@
-function addEntry(event) {
-    event.preventDefault(); // Prevent form from submitting
-    
+ function addEntry() {
     // Get form values
     var name = document.getElementById("name").value;
     var email = document.getElementById("email").value;
@@ -12,14 +10,6 @@ function addEntry(event) {
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
         alert("Invalid email address");
-        return false;
-    }
-    
-    // Check for age between 18 and 55
-    var birthDate = new Date(dob);
-    var age = calculateAge(birthDate);
-    if (age < 18 || age > 55) {
-        alert("Age must be between 18 and 55");
         return false;
     }
     
@@ -37,21 +27,8 @@ function addEntry(event) {
     dobCell.innerHTML = dob;
     acceptedCell.innerHTML = accepted ? "Yes" : "No";
     
-    // Save entries to local storage
-    var entries = JSON.parse(localStorage.getItem("entries")) || [];
-    entries.push({
-        name: name,
-        email: email,
-        password: password,
-        dob: dob,
-        accepted: accepted
-    });
-    localStorage.setItem("entries", JSON.stringify(entries));
-    
     // Clear form
     document.getElementById("registrationForm").reset();
     
     return false;
 }
-
-function calculateAge(birthDate)
