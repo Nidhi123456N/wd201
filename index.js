@@ -1,62 +1,57 @@
-// select the form element
-const form = document.querySelector('#registration-form');
-
-// add event listener to the form submission
-form.addEventListener('submit', function(event) {
-  event.preventDefault(); // prevent form from submitting
-
-  // get input values from the form
-  const name = document.querySelector('#name').value;
-  const email = document.querySelector('#email').value;
-  const password = document.querySelector('#password').value;
-  const dob = document.querySelector('#dob').value;
-  const acceptedTerms = document.querySelector('#accepted-terms').checked;
-
-  // validate email address
-  if (!validateEmail(email)) {
-    alert('Invalid email address!');
-    return;
-  }
-
-  // validate age
-  const age = calculateAge(dob);
-  if (age < 18 || age > 55) {
-    alert('You must be between 18 and 55 years old to register!');
-    return;
-  }
-
-  // add a new row to the table with the input values
-  const table = document.querySelector('#registration-table');
-  const row = table.insertRow();
-  const nameCell = row.insertCell();
-  const emailCell = row.insertCell();
-  const passwordCell = row.insertCell();
-  const dobCell = row.insertCell();
-  const acceptedTermsCell = row.insertCell();
-  nameCell.textContent = name;
-  emailCell.textContent = email;
-  passwordCell.textContent = password;
-  dobCell.textContent = dob;
-  acceptedTermsCell.textContent = acceptedTerms ? 'Yes' : 'No';
-
-  // reset the form
-  form.reset();
-});
-
-// helper function to validate email addresses
-function validateEmail(email) {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(email);
+function addEntry(event) {
+    event.preventDefault(); // Prevent form from submitting
+    
+    // Get form values
+    var name = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var dob = document.getElementById("dob").value;
+    var accepted = document.getElementById("accepted").checked;
+    
+    // Check for valid email
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        alert("Invalid email address");
+        return false;
+    }
+    
+    // Check for age between 18 and 55
+    var birthDate = new Date(dob);
+    var age = calculateAge(birthDate);
+    if (age < 18 || age > 55) {
+        alert("Age must be between 18 and 55");
+        return false;
+    }
+    
+    // Create table row
+    var table = document.getElementById("entries").getElementsByTagName("tbody")[0];
+    var row = table.insertRow(-1);
+    var nameCell = row.insertCell(0);
+    var emailCell = row.insertCell(1);
+    var passwordCell = row.insertCell(2);
+    var dobCell = row.insertCell(3);
+    var acceptedCell = row.insertCell(4);
+    nameCell.innerHTML = name;
+    emailCell.innerHTML = email;
+    passwordCell.innerHTML = password;
+    dobCell.innerHTML = dob;
+    acceptedCell.innerHTML = accepted ? "Yes" : "No";
+    
+    // Save entries to local storage
+    var entries = JSON.parse(localStorage.getItem("entries")) || [];
+    entries.push({
+        name: name,
+        email: email,
+        password: password,
+        dob: dob,
+        accepted: accepted
+    });
+    localStorage.setItem("entries", JSON.stringify(entries));
+    
+    // Clear form
+    document.getElementById("registrationForm").reset();
+    
+    return false;
 }
 
-// helper function to calculate age from date of birth
-function calculateAge(dob) {
-  const now = new Date();
-  const birthdate = new Date(dob);
-  let age = now.getFullYear() - birthdate.getFullYear();
-  const monthDiff = now.getMonth() - birthdate.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birthdate.getDate())) {
-    age--;
-  }
-  return age;
-}
+function calculateAge(birthDate)
