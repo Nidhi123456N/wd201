@@ -1,53 +1,114 @@
-const form = document.querySelector('#registration-form');
-const usersTable = document.querySelector('#users-table tbody');
+let formID = document.getElementById("regForm");
 
-// Load previously saved data from web storage
-const savedData = JSON.parse(localStorage.getItem('registrationData'));
-if (savedData) {
-  savedData.forEach(user => {
-    addUserToTable(user);
-  });
-}
+const loadEntriesFromLocal = () => {
+  let allEntries = localStorage.getItem("storageEntries");
 
-// Add a new user to the table
-function addUserToTable(user) {
-  const row = document.createElement('tr');
-  row.innerHTML = `
-    <td>${user.name}</td>
-    <td>${user.email}</td>
-    <td>${user.password}</td>
-    <td>${user.dob}</td>
-    <td>${user.acceptTerms ? 'Yes' : 'No'}</td>
-  `;
-  usersTable.appendChild(row);
-}
-
-// Validate date of birth
-function isValidDob(dob) {
-  const currentDate = new Date();
-  const maxAge = 55;
-  const minAge = 18;
-  const minDob = new Date(currentDate.getFullYear() - maxAge, currentDate.getMonth(), currentDate.getDate());
-  const maxDob = new Date(currentDate.getFullYear() - minAge, currentDate.getMonth(), currentDate.getDate());
-  dob = new Date(dob);
-  return dob >= minDob && dob <= maxDob;
-}
-
-// Handle form submission
-form.addEventListener('submit', event => {
-  event.preventDefault();
-  const name = form.elements['name'].value.trim();
-  const email = form.elements['email'].value.trim();
-  const password = form.elements['password'].value.trim();
-  const dob = form.elements['dob'].value.trim();
-  const acceptTerms = form.elements['accept-terms'].checked;
-  if (!isValidDob(dob)) {
-    alert('You must be between 18 and 55 years old to register.');
-    return;
+  if (allEntries != null) {
+    allEntries = JSON.parse(allEntries);
+  } else {
+    allEntries = [];
   }
-  const user = { name, email, password, dob, acceptTerms };
-  addUserToTable(user);
-  form.reset();
-  localStorage.setItem('registrationData', JSON.stringify([...(JSON.parse(localStorage.getItem('registrationData')) || []), user]));
+  return allEntries;
+};
+
+let previousEntries = loadEntriesFromLocal();
+
+const displayEntriesTabular = () => {
+  const entries = loadEntriesFromLocal();
+
+  const rows = entries
+    .map((entry) => {
+      const fullName = `<td scope="row" class="text-center">${entry.fullName}</td>`;
+      const email = `<td class="text-center">${entry.email}</td>`;
+      const password = `<td class="text-center">${entry.password}</td>`;
+      const dob = `<td class="text-center">${entry.dob}</td>`;
+      const conditions = `<td class="text-center">${entry.conditions}</td>`;
+
+      const row = `<tr>${fullName} ${email} ${password} ${dob} ${conditions}</tr>`;
+      return row;
+    })
+    .join("\n");
+
+  let tableDiv = document.getElementById("table-div");
+
+  tableDiv.innerHTML = `<table class="table">
+  <tr>
+    <th scope="col" class="text-center">Name</th>
+    <th scope="col" class="text-center">Email</th>
+    <th scope="col" class="text-center">Password</th>
+    <th scope="col" class="text-center">Dob</th>
+    <th scope="col" class="text-center">Accepted terms?</th>
+  </tr>
+    ${rows}
+  </table>`;
+};
+
+const pushUserData = (event) => {
+  event.preventDefault();
+
+  let fullName = document.getElementById("name").value;
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+  let dob = document.getElementById("dob").value;
+  let conditions = document.getElementById("conditions").checked;
+
+  let currentEntry = {
+    fullName,
+    email,
+    password,
+    dob,
+    conditions,
+  };
+
+  previousEntries.push(currentEntry);
+
+  localStorage.setItem("storageEntries", JSON.stringify(previousEntries));
+
+  displayEntriesTabular();
+};
+
+formID.addEventListener("submit", pushUserData);
+
+displayEntriesTabular();
+
+function getAge(today, birthDate) {
+  var age = today.getFullYear() - birthDate.getFullYear();
+  var m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
+
+let dateSelector = document.getElementById("dob");
+
+dateSelector.addEventListener("change", () => {
+  let [year, month, date] = document.getElementById("dob").value.split("-");
+
+  let dob = new Date(year, month, date);
+  let Today = new Date();
+
+  age = getAge(Today, dob);
+
+  dateSelector.style.border = "2px solid rgba(0, 0, 0, 0.4)";
+  if (age < 18 || age > 55) {
+    dateSelector.setCustomValidity("User age must be between 18 and 55");
+    dateSelector.style.border = "2px solid red";
+    return;
+  } else {
+    dateSelector.setCustomValidity("");
+  }
 });
 
+const email = document.getElementById("email");
+
+email.addEventListener("input", () => validate(email));
+
+function validate(ele) {
+  if (ele.validity.typeMismatch) {
+    ele.setCustomValidity("The Email is not in the right format!");
+    ele.reportValidity();
+  } else {
+    ele.setCustomValidity("");
+  }
+}
