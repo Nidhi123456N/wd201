@@ -1,51 +1,58 @@
-// Load saved user data from web storage
-window.onload = function() {
-	if (localStorage.getItem('userTable')) {
-		document.querySelector("#userTable tbody").innerHTML = localStorage.getItem('userTable');
-	}
-}
+// Get the registration form and the table body
+const registrationForm = document.getElementById("registration-form");
+const tableBody = document.querySelector("#registered-users tbody");
 
-// Save user data to web storage
-function saveUser(name, email, password, dob, terms) {
-	let userTable = document.querySelector("#userTable tbody");
-	let newRow = userTable.insertRow(-1);
-	let nameCell = newRow.insertCell(0);
-	let emailCell = newRow.insertCell(1);
-	let passwordCell = newRow.insertCell(2);
-	let dobCell = newRow.insertCell(3);
-	let termsCell = newRow.insertCell(4);
-	nameCell.innerHTML = name;
-	emailCell.innerHTML = email;
-	passwordCell.innerHTML = password;
-	dobCell.innerHTML = dob;
-	termsCell.innerHTML = terms;
-	localStorage.setItem('userTable', userTable.innerHTML);
-}
+// Add an event listener to the registration form
+registrationForm.addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent the form from submitting
 
-// Validate date of birth input
-function validateDob(dob) {
-	let today = new Date();
-	let dobDate = new Date(dob);
-	let age = today.getFullYear() - dobDate.getFullYear();
-	let monthDiff = today.getMonth() - dobDate.getMonth();
-	if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
-	    age--;
-	}
-	return (age >= 18 && age <= 55);
-}
+  // Get the values from the form
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const dob = new Date(document.getElementById("dob").value);
+  const acceptTerms = document.getElementById("accept-terms").checked;
 
-// Add submit event listener to registration form
-document.querySelector("#regForm").addEventListener("submit", function(event) {
-	event.preventDefault();
-	let name = document.querySelector("#name").value;
-	let email = document.querySelector("#email").value;
-	let password = document.querySelector("#password").value;
-	let dob = document.querySelector("#dob").value;
-	let terms = document.querySelector("#terms").checked;
-	if (validateDob(dob)) {
-		saveUser(name, email, password, dob, terms);
-		document.querySelector("#regForm").reset();
-	} else {
-		alert("Invalid date of birth. Please enter a date between 18 and 55 years ago.");
-	}
+  // Check if the user is between 18 and 55 years old
+  const today = new Date();
+  const age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < dob.getDate())
+  ) {
+    age--;
+  }
+
+  if (age < 18 || age > 55) {
+    alert("Sorry, you must be between 18 and 55 years old to register.");
+    return;
+  }
+
+  // Create a new table row and cells
+  const newRow = tableBody.insertRow(-1);
+  const nameCell = newRow.insertCell(0);
+  const emailCell = newRow.insertCell(1);
+  const passwordCell = newRow.insertCell(2);
+  const dobCell = newRow.insertCell(3);
+  const acceptTermsCell = newRow.insertCell(4);
+
+  // Add the values to the cells
+  nameCell.textContent = name;
+  emailCell.textContent = email;
+  passwordCell.textContent = password;
+  dobCell.textContent = dob.toLocaleDateString();
+  acceptTermsCell.textContent = acceptTerms ? "Yes" : "No";
+
+  // Clear the form
+  registrationForm.reset();
+
+  // Save the data to web storage
+  saveDataToWebStorage();
 });
+
+// Load the data from web storage when the page loads
+window.addEventListener("load", function () {
+  loadDataFromWebStorage();
+});
+
