@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vamsikri-hash/wd-201-nodejs.git"
+    "url": "git+https://github.com/Nidhi123456N/wd202-nodejs.git"
   },
   "author": "vamsi.bellam",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/vamsikri-hash/wd-201-nodejs/issues"
+    "url": "https://github.com/Nidhi123456N/wd202/issues"
   },
-  "homepage": "https://github.com/vamsikri-hash/wd-201-nodejs#readme",
+  "homepage": "https://github.com/Nidhi123456N/wd202-nodejs#readme",
   "dependencies": {
     "minimist": "^1.2.6",
     "cypress": "^10.3.0",
