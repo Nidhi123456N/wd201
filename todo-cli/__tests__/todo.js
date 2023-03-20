@@ -1,31 +1,21 @@
 // __tests__/todo.js
-const todoList = () => {
-  let all = [];
-  const add = (todoItem) => {
-    all.push(todoItem);
-  };
-  const markAsComplete = (index) => {
-    all[index].completed = true;
-  };
-
-  const overdue = () => {
-    return all.filter(
-      (item) => item.dueDate < new Date().toLocaleDateString("en-CA")
+const todoList = require('../todo');
+const {all, markAsComplete, add} = todoList();
+describe("TodoList Test Suite", () => {
+  test("Should add new todo" , () => {
+    expect(all.length).toBe(0);
+    add(
+      {
+        title : "Test todo";
+        completed : false,
+        dueDate : new Date().toLocaleDateString("en-CA")
+     }
     );
-  };
-
-  const dueToday = () => {
-    return all.filter(
-      (item) => item.dueDate === new Date().toLocaleDateString("en-CA")
-    );
-  };
-
-  const dueLater = () => {
-    return all.filter(
-      (item) => item.dueDate > new Date().toLocaleDateString("en-CA")
-    );
-  };
-  return { all, add, markAsComplete, overdue, dueToday, dueLater };
-};
-
-module.exports = todoList;
+  expect(all.length).toBe(1);
+});
+test("Should marks as todo as complete", () => {
+  expect(all[0].completed).toBe(false);
+  markAsComplete(0);
+  expect(all[0].completed).toBe(true);
+})
+})
