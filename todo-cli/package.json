@@ -1,0 +1,40 @@
+{
+  "dependencies": {
+    "jest": "^29.0.2",
+    "minimist": "^1.2.6",
+    "pg": "^8.8.0",
+    "sequelize": "^6.21.4"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "prettier --write ."
+    ]
+  },
+  "scripts": {
+    "db:create:test": "NODE_ENV=test npx sequelize-cli db:create",
+    "pretest": "NODE_ENV=test npx sequelize-cli db:drop && NODE_ENV=test npx sequelize-cli db:create",
+    "test": "NODE_ENV=test jest --detectOpenHandles",
+    "prepare": "husky install"
+  },
+  "name": "todoapp_sequelize",
+  "version": "1.0.0",
+  "main": "addTodo.js",
+  "devDependencies": {
+    "eslint": "^8.24.0",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "prettier": "^2.7.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nidhi123456N/wd201/new/main/todo-cli.git"
+  },
+  "author": "Kshitij Verma <kshitijv250@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nidhi123456N/wd201/new/main/todo-cli/issues"
+  },
+  "homepage": "https://github.com/Nidhi123456N/wd201/new/main/todo-cli#readme",
+  "description": ""
+}
