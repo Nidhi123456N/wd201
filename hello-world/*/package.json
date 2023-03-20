@@ -2,10 +2,13 @@
  "name": "http-server",
  "version": "1.0.0",
  "description": "My http server application",
- "main": "index.js",
+ "main": "todo.js",
  "scripts": {
-   "test": "echo \"Error: no test specified\" && exit 1"
+   "test": "jest"
  },
  "author": "",
- "license": "ISC"
+ "license": "ISC",
+ "devDependencies":{
+  "jest":"^28.1.3"
+ }
 }
