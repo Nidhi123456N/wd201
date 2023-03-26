@@ -1,49 +1,62 @@
-/* eslint-disable no-undef */
-const db = require("../models");
+// __tests__/todo.js
+let todoList = require("../todo");
 
-describe("Todo test suite", () => {
-  beforeAll(async () => {
-    await db.sequelize.sync({ force: true });
-  });
-  test("Should list overdues", async () => {
-    await db.Todo.addTask({
-      title: "Test item",
-      dueDate: new Date(new Date().setDate(new Date().getDate() - 1)),
-      completed: false,
-    });
-    const todoList = await db.Todo.overdue();
-    expect(todoList.length).toBe(1);
-  });
-  test("Should list dueToday", async () => {
-    await db.Todo.addTask({
-      title: "Test item",
-      dueDate: new Date(new Date().setDate(new Date().getDate())),
-      completed: false,
-    });
-    const todoList = await db.Todo.dueToday();
-    expect(todoList.length).toBe(1);
-  });
-  test("Should list dueLater", async () => {
-    await db.Todo.addTask({
-      title: "Test item",
-      dueDate: new Date(new Date().setDate(new Date().getDate() + 1)),
-      completed: false,
-    });
-    const todoList = await db.Todo.dueLater();
-    expect(todoList.length).toBe(1);
-  });
-  test("Should Mark as Complete", async () => {
-    await db.Todo.addTask({
-      title: "Test item",
-      dueDate: new Date(new Date().setDate(new Date().getDate())),
-      completed: false,
-    });
-    await db.Todo.markAsComplete(4);
-    const listItem = await db.Todo.findOne({
-      where: {
-        id: 4,
+const { all, markAsComplete, add, overdue, dueToday, dueLater } = todoList();
+/* eslint-disable no-undef */
+describe("Todo List Test Suite", () => {
+  beforeAll(() => {
+    // Seed the test data
+    const today = new Date();
+    const oneDay = 60 * 60 * 24 * 1000;
+    [
+      {
+        title: "Buy milk",
+        completed: false,
+        dueDate: new Date(today.getTime() - 2 * oneDay).toLocaleDateString(
+          "en-CA"
+        ),
       },
+      {
+        title: "Pay rent",
+        completed: false,
+        dueDate: new Date().toLocaleDateString("en-CA"),
+      },
+      {
+        title: "Submit assignment",
+        completed: false,
+        dueDate: new Date(today.getTime() + 2 * oneDay).toLocaleDateString(
+          "en-CA"
+        ),
+      },
+    ].forEach(add);
+  });
+  test("Should add a new todo", () => {
+    expect(all.length).toEqual(3);
+
+    add({
+      title: "A test item",
+      completed: false,
+      dueDate: new Date().toLocaleDateString("en-CA"),
     });
-    expect(listItem.completed).toBe(true);
+
+    expect(all.length).toEqual(4);
+  });
+
+  test("Should mark a todo as complete", () => {
+    expect(all[0].completed).toEqual(false);
+    markAsComplete(0);
+    expect(all[0].completed).toEqual(true);
+  });
+
+  test("Should retrieve overdue items", () => {
+    expect(overdue().length).toEqual(1);
+  });
+
+  test("Should retrieve due today items", () => {
+    expect(dueToday().length).toEqual(2);
+  });
+
+  test("Should retrieve due later items", () => {
+    expect(dueLater().length).toEqual(1);
   });
 });
